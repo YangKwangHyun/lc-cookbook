@@ -21,4 +21,9 @@ class Order extends Model
             ->values()
             ->toArray();
     }
+
+    public function scopeGetYearOrders(Builder $query, $year)
+    {
+        return $query->whereYear('created_at', $year);
+    }
 }
