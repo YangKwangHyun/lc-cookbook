@@ -21,6 +21,11 @@ Route::get('/', function () {
 // charts
 Route::get('/charts', [App\Http\Controllers\ChartsController::class, 'index'])->name('charts');
 
+// stats
+Route::get('/stats', function() {
+    return view('stats');
+});
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
