@@ -19,6 +19,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        view()->composer('layouts.app', function ($view) {
+            $announcement = \App\Models\Announcement::first();
+
+            $view->with([
+                'bannerText' => $announcement->bannerText,
+                'bannerColor' => $announcement->bannerColor,
+                'isActive' => $announcement->isActive,
+            ]);
+        });
     }
 }

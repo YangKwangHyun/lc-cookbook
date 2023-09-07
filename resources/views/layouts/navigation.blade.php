@@ -16,6 +16,27 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
                 </div>
+
+                {{-- Charts --}}
+                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                    <x-nav-link :href="route('charts')" :active="request()->routeIs('charts')">
+                        {{ __('Charts') }}
+                    </x-nav-link>
+                </div>
+
+                {{-- Stats --}}
+                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                    <x-nav-link :href="route('stats')" :active="request()->routeIs('stats')">
+                        {{ __('Stats') }}
+                    </x-nav-link>
+                </div>
+
+                {{-- Edit Announcement --}}
+                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                    <x-nav-link :href="route('announcement.edit')" :active="request()->routeIs('announcement.edit')">
+                        {{ __('Edit Announcement') }}
+                    </x-nav-link>
+                </div>
             </div>
 
             <!-- Settings Dropdown -->
@@ -79,6 +100,20 @@
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
+            </x-responsive-nav-link>
+        </div>
+
+        {{-- Charts --}}
+        <div class="pt-2 pb-3 space-y-1">
+            <x-responsive-nav-link :href="route('charts')" :active="request()->routeIs('charts')">
+                {{ __('Charts') }}
+            </x-responsive-nav-link>
+        </div>
+
+        {{-- Stats --}}
+        <div class="pt-2 pb-3 space-y-1">
+            <x-responsive-nav-link :href="route('stats')" :active="request()->routeIs('stats')">
+                {{ __('Stats') }}
             </x-responsive-nav-link>
         </div>
 

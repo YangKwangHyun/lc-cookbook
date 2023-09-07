@@ -22,9 +22,48 @@ Route::get('/', function () {
 Route::get('/charts', [App\Http\Controllers\ChartsController::class, 'index'])->name('charts');
 
 // stats
-Route::get('/stats', function() {
+Route::get('/stats', function () {
     return view('stats');
+})->name('stats');
+
+Route::get('/announcement', function () {
+    $announcement = \App\Models\Announcement::first();
+
+    abort_if(!$announcement->isActive, 404);
+
+    return view('announcement', [
+        'announcement' => $announcement,
+    ]);
 });
+
+Route::get('/announcement/edit', function () {
+    $announcement = \App\Models\Announcement::first();
+
+    return view('edit-announcement', [
+        'announcement' => $announcement,
+    ]);
+})->name('announcement.edit');
+
+Route::patch('/announcement/update', function (\Illuminate\Http\Request $request) {
+    $fields = $request->validate([
+        'isActive'    => 'required',
+        'bannerText'  => 'required',
+        'bannerColor' => 'required',
+        'titleText'   => 'required',
+        'titleColor'  => 'required',
+        'content'     => 'required',
+        'buttonText'  => 'required',
+        'buttonLink'  => 'required|url',
+        'buttonColor' => 'required',
+    ]);
+
+
+    $announcement = \App\Models\Announcement::first();
+
+    $announcement->update($fields);
+
+    return back()->with('success_message', 'Announcement was updated!');
+})->name('announcement.update');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
