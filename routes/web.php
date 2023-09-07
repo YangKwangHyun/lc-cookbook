@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use Intervention\Image\Facades\Image;
 
 /*
 |--------------------------------------------------------------------------
@@ -55,7 +56,27 @@ Route::patch('/announcement/update', function (\Illuminate\Http\Request $request
         'buttonText'  => 'required',
         'buttonLink'  => 'required|url',
         'buttonColor' => 'required',
+        'imageUpload' => 'file|image|max:20000',
     ]);
+
+    if($request->imageUpload) {
+        $requestImage = $request->file('imageUpload');
+
+        $image = Image::make($requestImage);
+
+        $image->resize(600, null, function ($constraint) {
+            $constraint->aspectRatio();
+            $constraint->upsize();
+        });
+
+        $path = config('filesystems.disks.public.root') . '/' . $requestImage->hashName();
+        $image->save($path);
+
+        $fields = array_merge($fields, ['imageUpload' => $requestImage->hashName()]);
+
+        // $path = $request->file('imageUpload')->store('images', 'public');
+        // $fields = array_merge($fields, ['imageUpload' => $path]);
+    }
 
 
     $announcement = \App\Models\Announcement::first();

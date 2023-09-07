@@ -5,12 +5,18 @@
         </div>
         <div class="text-gray-600 px-5 py-5">
 
+            @if($announcement->imageUpload)
+                <img src="{{ asset("storage/".$announcement->imageUpload) }}" alt="image" class="mx-auto">
+            @endif
+
             <div class="content">
                 {!! $announcement->content !!}
             </div>
 
             <p class="mt-6 mx-auto">
-                <a href="{{ $announcement->buttonLink }}" class="bg-purple-800 text-white inline-block rounded-xl font-semibold px-8 py-4" style="background: {{ $announcement->buttonColor }}">{{ $announcement->buttonText }}</a>
+                <a href="{{ $announcement->buttonLink }}"
+                   class="bg-purple-800 text-white inline-block rounded-xl font-semibold px-8 py-4"
+                   style="background: {{ $announcement->buttonColor }}">{{ $announcement->buttonText }}</a>
             </p>
         </div>
     </div>
