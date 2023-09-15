@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Requests\PostFormRequest;
+use App\Models\Post;
 use Illuminate\Support\Facades\Route;
 use Intervention\Image\Facades\Image;
 
@@ -103,6 +105,47 @@ Route::post('/upload', function(\Illuminate\Http\Request $request) {
     return $path;
 });
 
+Route::get('/posts', function () {
+    return view('posts.index', [
+        'posts' => Post::latest()->get(),
+    ]);
+})->name('posts.index');
+
+Route::get('/posts/create', function () {
+    return view('posts.create', [
+        'post' => new Post,
+    ]);
+})->name('posts.create');
+
+Route::get('/posts/{post}', function (Post $post) {
+    return view('posts.show', [
+        'post' => $post,
+    ]);
+});
+
+Route::post('/posts/create', function (PostFormRequest $request) {
+    // Post::create(fields($request));
+    $request->updateOrCreate(new Post());
+
+    return redirect('/posts')->with('success_message', 'Post was created!');
+});
+
+Route::get('/posts/{post}/edit', function (Post $post) {
+    return view('posts.edit', [
+        'post' => $post,
+    ]);
+});
+
+
+
+Route::patch('/posts/{post}', function (Post $post, PostFormRequest $request) {
+
+    // $post->update(fields($request));
+    $request->updateOrCreate($post);
+
+    return redirect('/posts/'.$post->id)->with('success_message', 'Post was updated!');
+});
+
 
 
 Route::get('/dashboard', function () {
@@ -116,3 +159,12 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+function fields(PostFormRequest $request)
+{
+    return [
+        'user_id' => 1,
+        'title' => $request->title,
+        'body' => $request->body,
+    ];
+}
