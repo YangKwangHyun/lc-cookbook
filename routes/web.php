@@ -81,11 +81,11 @@ Route::patch('/announcement/update', function (\Illuminate\Http\Request $request
         // $fields = array_merge($fields, ['imageUpload' => $path]);
     }
 
-    if($request->imageUploadFilePond) {
-        $newFileName = \Illuminate\Support\Str::after($request->imageUploadFilePond, 'tmp/');
-        Storage::disk('public')->move($request->imageUploadFilePond, "images/$newFileName");
-        $fields = array_merge($fields, ['imageUploadFilePond' =>  "images/$newFileName"]);
-    }
+    // if($request->imageUploadFilePond) {
+    //     $newFileName = \Illuminate\Support\Str::after($request->imageUploadFilePond, 'tmp/');
+    //     Storage::disk('public')->move($request->imageUploadFilePond, "images/$newFileName");
+    //     $fields = array_merge($fields, ['imageUploadFilePond' =>  "images/$newFileName"]);
+    // }
 
 
     $announcement = \App\Models\Announcement::first();

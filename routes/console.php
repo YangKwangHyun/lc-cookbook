@@ -17,3 +17,19 @@ use Illuminate\Support\Facades\Artisan;
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
+
+Artisan::command('upload:cleanup', function () {
+    $this->info('Cleaning up the tmp uploads folder...');
+
+    $files = Storage::disk('public')->listContents('tmp');
+
+    $numberOfFiles = collect($files)
+        ->filter(function($file){
+            return $file['type'] === 'file' && $file['lastModified'] < now()->subMinutes(1)->getTimestamp();
+        })->each(function($file){
+            // dump($file);
+            Storage::disk('public')->delete($file['path']);
+        })->count();
+
+    $this->info("$numberOfFiles files have been delete on ".now());
+})->purpose('Clean up the tmp uploads folder');
