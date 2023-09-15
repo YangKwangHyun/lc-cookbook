@@ -46,6 +46,8 @@ Route::get('/announcement/edit', function () {
 })->name('announcement.edit');
 
 Route::patch('/announcement/update', function (\Illuminate\Http\Request $request) {
+    // dd($request->all());
+
     $fields = $request->validate([
         'isActive'    => 'required',
         'bannerText'  => 'required',
@@ -57,6 +59,7 @@ Route::patch('/announcement/update', function (\Illuminate\Http\Request $request
         'buttonLink'  => 'required|url',
         'buttonColor' => 'required',
         'imageUpload' => 'file|image|max:20000',
+        'imageUploadFilePond' => 'string|nullable',
     ]);
 
     if($request->imageUpload) {
@@ -78,6 +81,12 @@ Route::patch('/announcement/update', function (\Illuminate\Http\Request $request
         // $fields = array_merge($fields, ['imageUpload' => $path]);
     }
 
+    if($request->imageUploadFilePond) {
+        $newFileName = \Illuminate\Support\Str::after($request->imageUploadFilePond, 'tmp/');
+        Storage::disk('public')->move($request->imageUploadFilePond, "images/$newFileName");
+        $fields = array_merge($fields, ['imageUploadFilePond' =>  "images/$newFileName"]);
+    }
+
 
     $announcement = \App\Models\Announcement::first();
 
@@ -85,6 +94,16 @@ Route::patch('/announcement/update', function (\Illuminate\Http\Request $request
 
     return back()->with('success_message', 'Announcement was updated!');
 })->name('announcement.update');
+
+Route::post('/upload', function(\Illuminate\Http\Request $request) {
+    if($request->imageUploadFilePond) {
+        $path = $request->file('imageUploadFilePond')->store('tmp', 'public');
+    }
+
+    return $path;
+});
+
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');
