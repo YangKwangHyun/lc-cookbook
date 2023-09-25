@@ -51,6 +51,13 @@
                         {{ __('Create Post') }}
                     </x-nav-link>
                 </div>
+
+                {{-- Drag and Drop --}}
+                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                    <x-nav-link :href="route('drag-drop')" :active="request()->routeIs('drag-drop')">
+                        {{ __('Drag and Drop') }}
+                    </x-nav-link>
+                </div>
             </div>
 
             <!-- Settings Dropdown -->
