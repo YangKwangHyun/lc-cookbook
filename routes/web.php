@@ -127,7 +127,7 @@ Route::post('/posts/create', function (PostFormRequest $request) {
     // Post::create(fields($request));
     $request->updateOrCreate(new Post());
 
-    return redirect('/posts')->with('success_message', 'Post was created!');
+    return redirect('/posts')->with('success_message', __('postsMessages.created'));
 });
 
 Route::get('/posts/{post}/edit', function (Post $post) {
