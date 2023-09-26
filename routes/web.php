@@ -3,8 +3,11 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Requests\PostFormRequest;
 use App\Models\Post;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use Intervention\Image\Facades\Image;
+use Illuminate\Http\Client\Pool;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -150,6 +153,30 @@ Route::get('/drag-drop', function () {
     return view('drag-drop');
 })->name('drag-drop');
 
+Route::get('/http-client', function() {
+    // $responseGithub = \Illuminate\Support\Facades\Http::get('https://api.github.com/users/YangKwangHyun/repos?sort=created&per_page=10');
+
+    // $responseWeather = Http::get('https://api.openweathermap.org/data/2.5/weather?q=Toronto&units=metric&appid='.config('services.openWeatherMap.appId'));
+
+    // $responseMovies = Http::withToken(config('services.tmdb.bearerToken'))->get('https://api.themoviedb.org/3/movie/popular');
+
+    // $responseMovies = \Illuminate\Support\Facades\Http::movies()->get('/movie/popular');
+
+    // dump($responseMovies->json());
+
+    $responses = Http::pool(fn (Pool $pool) => [
+        $pool->as('github')->get('https://api.github.com/users/YangKwangHyun/repos?sort=created&per_page=10'),
+        $pool->as('weather')->get('https://api.openweathermap.org/data/2.5/weather?q=Toronto&units=metric&appid='.config('services.openWeatherMap.appId')),
+        $pool->as('movies')->withToken(config('services.tmdb.bearerToken'))->get('https://api.themoviedb.org/3/movie/popular'),
+    ]);
+
+    return view('http-client', [
+        'repos' => $responses['github']->json(),
+        'weather'=> $responses['weather']->json(),
+        'movies' => $responses['movies']->json(),
+    ]);
+});
+
 
 
 Route::get('/dashboard', function () {
@@ -164,11 +191,11 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__.'/auth.php';
 
-function fields(PostFormRequest $request)
-{
-    return [
-        'user_id' => 1,
-        'title' => $request->title,
-        'body' => $request->body,
-    ];
-}
+// function fields(PostFormRequest $request)
+// {
+//     return [
+//         'user_id' => 1,
+//         'title' => $request->title,
+//         'body' => $request->body,
+//     ];
+// }
